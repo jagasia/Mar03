@@ -1,0 +1,580 @@
+Reminder
+    Encryption	(share your opinion)
+	Mechanism to secure data
+	Prevent unauthorized access
+	change the info into another form by adding code
+	changing the content to other format
+	it is the process of converting human-readable plain text to incomprehensible text
+
+	Good. 
+	IMO, converting plain text into cypher text is called as encryption.
+	The vice versa is called as decryption
+
+ex:	
+	we dont want the password to be visible. (It is not about masking the input control)
+	the data in transit (means, the data travels from a source to destination)
+	
+	education		(is a plain text)	
+	fevdbujpo		(this is cypher text)
+
+	here, the encryption key is 	char+1
+
+	what is decryption?		char-1
+		fevdbujpo
+		education		this is decryption
+
+	Encryption is different from encoding. How?
+		Encoding is nothing but representing a character as a number	(A=65)
+		There is no secret in this.
+
+		But in encryption, we have a secret key.
+
+why we need encryption:
+	1) while signing up, the user creates a password. That information is stored in the database.
+		so it is vulnerable that anybody who has access to the database can see your password.
+	2) when data is in transit, sniffers can intrude or take the data in between
+	
+
+Encryption types:
+	SHA1	-	one way encryption	(means, there is no decryption key for this algorithm)
+
+gmail
+
+while signing up, i give a password
+	password 			is my password
+
+	qbttxpse		this is stored in the database
+
+Everytime, you log in, you will enter "password". gmail program will encrypt it as "qbttxpse"
+compare 	qbttxpse		with the database	qbttxpse
+both are matching. login is success
+
+But if i say "Forgot password", gmail will never show your old password at all. It will only allow you to reset and create a new password
+
+now if a hacker gets into the database, he will see your password stored as "qbttxpse". But no use in seeing that password
+	if he enter "qbttxpse" in the password text box, gmail as usual will encryt it to
+	rcuyqtf	 this will not match qbttxpse (which is stored in the db)
+
+
+public String encryptSha1(String password)
+{
+	//String password = "123456";
+        MessageDigest md = MessageDigest.getInstance("SHA-256");
+        byte[] hashInBytes = md.digest(password.getBytes(StandardCharsets.UTF_8));
+		// bytes to hex
+        StringBuilder sb = new StringBuilder();
+        for (byte b : hashInBytes) {
+            sb.append(String.format("%02x", b));
+        }
+        //System.out.println(sb.toString());
+	return sb.toString();
+}
+
+plain text:	password@123
+cypher text:	2b217fd26f0506d7cfe87e08483838fe8bf130ce6b3a987d94adfd3d043454a5
+
+
+    sending emails from java program
+
+to send email from a java program, we need a "from" address
+	"to" address can be anything (yahoo/gmail/anything)
+
+the steps for sending email from a "gmail" account.
+	i) Create an email address from gmail.com
+	ii) enable "app" access in gmail. Because, gmail usually do not allow sending emails from gmail from apps
+		a) Login to gmail
+		b) Click your profile button	->Manage your google account-> Less secure app access
+			Allow less secure apps: OFF	(CHANGE IT TO ON)
+
+	iii) add a jar file
+			java-mail-1.4.4.jar
+		to add a jar file,
+		right click project->properties-> Java build path-> Libraries
+			Add external jars	(button)
+		remember, the jar should be pasted in your project(bin folder) and refer to that location of jar
+
+	 Properties props = new Properties();
+	        props.put("mail.smtp.host", "true");
+	        props.put("mail.smtp.starttls.enable", "true");
+	        props.put("mail.smtp.host", "smtp.gmail.com");
+	        props.put("mail.smtp.port", "587");
+	        props.put("mail.smtp.auth", "true");
+	        //Establishing a session with required user details
+	        Session session = Session.getInstance(props, new javax.mail.Authenticator() {
+	            protected PasswordAuthentication getPasswordAuthentication() {
+	                return new PasswordAuthentication("YourGmailId@gmail.com", "xxxxxxxxxx");
+	            }
+	        });
+	        try {
+	            //Creating a Message object to set the email content
+	            MimeMessage msg = new MimeMessage(session);
+	            //Storing the comma seperated values to email addresses
+	            String to = "rjagadeeswaran@yahoo.com";
+	            /*Parsing the String with defualt delimiter as a comma by marking the boolean as true and storing the email
+	            addresses in an array of InternetAddress objects*/
+	            InternetAddress[] address = InternetAddress.parse(to, true);
+	            //Setting the recepients from the address variable
+	            msg.setRecipients(Message.RecipientType.TO, address);
+	            String timeStamp = new SimpleDateFormat("yyyymmdd_hh-mm-ss").format(new Date());
+	            msg.setSubject("Sample Mail : " + timeStamp);
+	            msg.setSentDate(new Date());
+	            msg.setText("Sampel System Generated mail");
+	            msg.setHeader("XPriority", "1");
+	           
+	            Transport.send(msg);
+	            System.out.println("Mail has been sent successfully");
+	        } catch (MessagingException mex) {
+	            System.out.println("Unable to send an email:\n" + mex);
+	        }
+--------------------------------------------------------------
+RDBMS
+--------------------------------------------------------------
+rEMember the employees.dat ////????
+
+can we call it as a database?
+	we were able to store employee details there. We can compare that file to one table. Employee table.
+
+But a database can contain many tables.
+	Terminology of database
+
+	A database can contain many objects including Table.
+
+	Table
+	View
+	Functions
+	Procedures
+	Index
+	Sequence
+	Trigger
+	Dictionaries
+
+Compare file system with Database		
+	Database is also stored in file system
+	Why they compare file system with a database???	
+		A file system can store unstructured data.
+		But a database is always structured data
+
+For example
+	124 A main street, Opposite to ABC showroom, 4th Sector, Mumbai
+
+	This is an unstructured data
+
+
+If there are 100 employees each having an address
+	I want to know who are all coming from 4th sector,
+	it is complicated to find it.
+
+if there are 4 columns
+	124A		main street, op....		4th Sector		Mumbai
+
+We can retrieve based on condition on 3rd column
+
+so if we store data as a paragraph, it is unstructured data. 
+just compare excel sheet with MS Word
+
+dateOfBirth is a data
+age is an information
+
+we learnt that a database is made of data files
+
+	there may be more than 1 data file for a database
+
+here, we need to identify some physical structure in relevence to logical structure
+
+I say TABLE	(Logical structure)
+I say data file	(Physical)
+
+what is physical? we can see it in an operating system ie., file system
+
+In MS Access, a database is 1 file		.mdb		.accdb file
+
+But in oracle, it is not like 1 database has 1 file. NOT TRUE
+
+data file contains tablespace (which is a logical representation)
+
+Database is logical
+
+a database can contain many tables
+	what is a table?
+		table is an example for Relation
+	What is a relation?
+		ROW - COLUMN structure
+
+	i run a query that returns only few records from the table. This result is a Relation. (but not a table)
+
+	Relations can have relationship
+
+Relational Database Management System
+
+Relational Algebra
+	1970s
+	by Dr. E.F.Codd
+	12 rules
+		every information should be stored in the database in the form of table only
+
+DBMS became RDBMS
+
+Data models
+	how the data is represented
+
+1) Record based logical model
+2) E-R model		Entity Relationship
+3) Hierarchical model			Windows File system
+4) Relational model	
+		represent the entities as relation
+5) Network model
+6) Object-oriented Data Model
+7) Object Relation Model
+
+Customer purchase Product		
+	if we write the business process in english. we underline the regular nouns.
+
+	Customer
+	Product
+
+	these nouns become Entities
+
+	the relationship between these entities can be
+		1 to M
+		M to 1
+		1 to 1		why not merge them into 1 Entity	ex: DepartmentHead - Department
+				we can merge like	Department Table has DepartmentHead as a column
+				but the problem is whenever the head is replaced by another head, we update. An 				update that causes, old data to vanish. 
+				Thats why they maintain 2 tables. 
+		M to M
+
+as we discussed, M - M		relationship will become a new entity
+
+Every entity usually become table
+	sometimes, 
+		A table Per Entity
+		A table per entity hierarchy
+		
+
+------------------
+DOWNLOAD 
+	hr_cre
+	hr_popul
+
+from git hub 
+and run in sql developer to create sample tables and data
+
+
+SELECT * FROM EMPLOYEES;
+	here, 
+		EMPLOYEES is the name of the table
+		* means, all the columns 
+
+	SELECT statement is used to retrieve records from one or more tables. In this example, we are retrieving all the records from a table called "EMPLOYEES"
+
+
+TABLE
+RECORD	/ TUPLE		means row in the table
+COLUMN			a field in the table
+CELL/DATA		one data (intersect column and row)
+NULL			missing information		(NOT a space or 0 or "null" NOT THOSE 4 CHARACTERS)
+
+		IN SOME environments, null is represented as 
+		sql developer:	(null)
+		live sql:	-
+
+		they are just resemblence of null. they are not characters stored
+
+
+Task:
+	Display 
+		employee_id
+		first_name
+		last_name
+		salary
+
+	from employees table.
+	
+
+Task:
+	Display the same columns as of previous task,
+	but only for the employees whose salary is lesser than 18000
+		hint:	extend the query with a "WHERE <<condition>>"
+
+Task:
+	Display the same columns as of previous task,
+	but display the records in the ascending order of last_name column
+		hint:	extend the query with a "ORDER BY <<column_name>>"
+
+	try with "desc" for descending order
+
+
+SQL
+	Structured Query Language
+		this language is used to access the database in many ways. tHERE are sub category of SQL language
+
+	DDL	Data Definition Language	(CREATE, ALTER, DROP, TRUNCATE, COMMENT, RENAME)
+	DML	Data Manipulation Language	(INSERT, UPDATE, DELETE, MERGE)
+	DQL	Data Query Language		(SELECT)
+	DCL	Data Control Languagae		(GRANT, REVOKE)
+	TCL	Transaction Control language	(COMMIT, SAVEPOINT, ROLLBACK)
+
+
+DDL
+	CREATE TABLE	is a DDL statement. By creating a table, you are defining the data structure that every record should follow
+	
+	THERE IS NO COMMIT OR ROLLBACK FOR DDL statements
+
+Task:
+	write a query to display all employees (same column list), who belong to department (60 and 100) and salary less than 10k
+	hint:
+		use AND, OR operators with brackets ()
+
+-- SELECT * FROM HR.EMPLOYEES
+-- WHERE (DEPARTMENT_ID=60 OR DEPARTMENT_ID=100)
+-- AND SALARY<10000;
+
+SELECT * FROM HR.EMPLOYEES
+WHERE (DEPARTMENT_ID IN (60,100))
+AND SALARY<10000;
+
+
+What is meant by 
+	PROJECTION
+	SELECTION
+	UNION
+	UNION ALL
+	INTERSECT
+	MINUS
+	DIVIDE
+
+There are many columns in a table. But you are displaying only specific columns.
+	This is called as PROJECTION
+
+There are many records in a table. But you are displaying only specific records.
+	This is called as SELECTION
+
+For PROJECTION, columns listed in the select query
+For SELECTION, WHERE condition is used
+
+	
+We query some records from a table.
+we query some records from another table. we can combine those 2 results using UNION
+	SELECT * FROM HR.EMPLOYEES
+		WHERE (DEPARTMENT_ID=30)
+		AND SALARY<10000
+	UNION
+	SELECT * FROM HR.EMPLOYEES
+		WHERE (DEPARTMENT_ID IN (60,100))
+		AND SALARY<10000;
+
+UNION vs UNION ALL
+	UNION combines the result of 2 select queries and display UNIQUE set of records
+		If any rows are common in both query results, they are displayed only once
+			so 10+5 may not always be 15 at all
+	UNION ALL combines the result of 2 select queries and display all the records including duplicates
+		so in UNION ALL		5 ROWS + 10 ROWS = 15 ROWS
+
+
+like in any language, SQL also has operators
+	Arithmetic operators
+		+, -, *, /, MOD, 
+	Comparison operators
+		>, <, >=, <=, != (also <>)
+	Logical operators
+		AND OR NOT XOR
+	IN, NOT IN			WHERE DEPARTMENT_ID IN (30,60,100)
+	BETWEEN, NOT BETWEEN		WHERE SALARY BETWEEN 5000 AND 10000
+	LIKE				WHERE FIRST_NAME LIKE 'A%'
+			in like operator,	% means 0 or more characters 
+						_ means 1 character 
+Task:
+	Display all employees whose name starts with 'A'
+
+
+	SELECT * FROM EMPLOYEES WHERE FIRST_NAME like 'A%'
+
+Task:
+	display all the employees who belongs to the department of Elizabeth
+	
+	Hint:
+		use sub query
+
+	SELECT COL1, COL2 FROM TABLE WHERE COL1=(SELECT COL FROM TABLE WHERE CONDITION)
+
+Task:
+	Display only
+		EMPLOYEE_ID
+		FIRST_NAME
+		LAST_NAME
+		MANAGER_ID
+		MANAGER'S FIRST_NAME
+		MANAGER'S LAST_NAME
+
+	FROM EMPLOYEES TABLE
+	(hint:	use self join)
+
+
+RDBMS OPERATORS
+	PROJECTION				
+	SELECTION
+	UNION
+	UNION ALL
+	INTERSECT
+	MINUS
+	DIVIDE
+
+JOIN:
+	whenever we need to display columns from more than 1 table, we use JOIN
+	
+
+
+
+SELECT * FROM HR.EMPLOYEES WHERE SALARY BETWEEN 6000 AND 7000
+MINUS
+SELECT * FROM HR.EMPLOYEES WHERE SALARY BETWEEN 5000 AND 6000
+
+SELECT * FROM HR.EMPLOYEES WHERE SALARY BETWEEN 6000 AND 7000
+INTERSECT
+SELECT * FROM HR.EMPLOYEES WHERE SALARY BETWEEN 5000 AND 6000
+
+
+
+Keys in DBMS:
+-------------
+P	Primary Key
+R	Foreign Key
+	Candidate Key
+	Alternate Key
+	Composite Key
+U	Unique
+	NOT NULL
+C	Check
+
+Primary Key:
+	in employees table, employee_id is the primary key column
+				EMP_EMP_ID_PK
+	What is primary key?
+		is a constraint that ensures that the column(s) contain unique values, and NOT NULL
+
+	In short, a primary key is		UNIQUE+NOT NULL
+
+Unique:
+	a column defined with Unique constraint will not allow duplicates. Will it allow NULL? yes. How many NULL 		allowed?
+
+NOT NULL:
+	a column defined with NOT NULL constraint will not allow NULL (means value is mandatory)
+
+
+Foreign Key:
+	
+	DEPARTMENT TABLE HAS RECORDS
+		DEPARTMENT_ID	FROM 10, 20,...	280	
+	IN EMPLOYEES TABLE, I CANNOT ENTER A DEPARTMENT_ID AS 290 BECAUSE, 290 IS NOT FOUND IN DEPARTMENTS TABLE
+
+	THIS IS ACHIEVED BECAUSE, A foreign key for department id is added to the employees table that references Department table
+
+	ex:
+		PRODUCT table contains 5 products	P1, P2, ...P5
+		IN SALES table, the product id cannot be P6	Because, there is no product P6 found in Product table
+		how is it achieved?
+		Add foreign key in sales table that references Product table Product Id column
+
+	Foreign key ensures that only the values found in primary key of another table is allowed to be entered in this table
+	Means, it reference another table's primary key
+	Referential Integrity
+
+FOREIGN KEY 
+	allows duplicates
+	allows NULL
+
+Master table		(PRIMARY)
+Details table		/	Transaction
+
+while creating a foreign key, we are becoming dependent on the primary key table
+	we use values referring to the primary key column of another table. What happens? if the table is dropped
+		or records are deleted?
+	we call it as Foreign Key constraints 	(While creating foreign key, we can specify)
+		RESTRICT	(default)
+		SET NULL
+		CASCADE
+
+	restrict means? if i delete a row in master table, that row already has child records in details table, that DELETE operation is RESTRICTED. not allowed.
+
+CANDIDATE KEY:
+	There is no constraint called candidate key.  It is just an opinion that a column is a candidate for primary key
+Alternate Key:
+	this is an opinion that a column can be used as an alternative for primary key
+	because, sometimes, if many transactions use same column, it may overload server
+
+Composite key:
+	A primary key can be composite	(means, made up of more than 1 column together)
+
+	invno	productid	customerid	
+	1	123		c1
+	1	210		c1
+	1	51		c1
+	1	124		c1
+	2	124
+
+	
+	what is primary key in this SALES TABLE?
+	solution:
+		combination of invo,producti	together is a primary key
+
+	sir, only 1 column should be a primary key no?	NO
+	there is only 1 primary key allowed in a table. That primary key can be composite
+		can be made of two columns
+
+	
+CREATE TABLE DUMMY3
+(
+	INVNO INT,
+	PID INT,
+	CID INT,
+	CONSTRAINT pkdummy3 PRIMARY KEY(INVNO,PID)
+);
+
+SELECT COLUMN LIST
+FROM TABLE1, TABLE2
+WHERE CONDITION WITH SUB QUERIES
+GROUP BY
+HAVING
+ORDER BY
+
+SUB QUERY
+	is an inner query which is usually executed first. The result of the inner query
+	is used by the outer query
+
+	in case of correlated sub query, the inner query is dependent on the outer query
+	so both works together
+
+Before lunch, we saw that requirement
+	display all employees belonging to the department of 'Elizabeth'
+
+	how we solved it?	we created a sub query that found the department_id of Elizabeth
+	and that department id was used by outer query to display all the employees of that did
+
+Rules of sub query:
+	1) When a sub query returns only 1 row, then the outer query condition can use	
+	=
+	!=
+	>
+	<
+	>=
+	<=
+
+operators.
+
+	But if the sub query returns more than one row, 
+	IN
+	NOT IN
+	>=ALL
+	<=ALL
+	
+	>=ANY
+	<=ANY
+	
+	2) sub query in bracket
+
+	3) usually sub query should be in the right side of the operator
+
+	4) single row subquery (is a sub query that uses any operator mentioned in 1st rule)
+		cannot have group by	(because, group by produces 1 result per group)
+
+	5) order by is not necessary in a sub query except in TOP n analysis
